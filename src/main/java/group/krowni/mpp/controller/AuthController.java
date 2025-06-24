@@ -75,38 +75,18 @@ public class AuthController {
      */
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginDto dto) {
-        try {
-            // 1. Authentifier l'utilisateur
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            dto.getEmail(),
-                            dto.getPassword()
-                    )
-            );
-
-            // 2. Placer l'Authentication dans le contexte Spring
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-
-            // 3. Générer un token JWT avec les infos de l'Authentication
-            String token = tokenProvider.generateToken(authentication);
-
-            // 4. Retourner la réponse
-            return ResponseEntity.ok(Map.of(
-                    "email", authentication.getName(),
-                    "token", token
-            ));
-        } catch (UsernameNotFoundException | BadCredentialsException ex) {
-            // Exception prévue : email inconnu ou mot de passe erroné
-            // Retournez un 401 plus clair
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(Map.of("error", ex.getMessage()));
-        } catch (Exception ex) {
-            // Là, on attrape TOUT le reste, on logge pile la cause racine
-            System.err.println("Echec lors de l’authentification :" + ex);
-            // Note : ex.getCause() contient souvent l’exception d’origine
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "Erreur interne"));
-        }
-
+        Authentication auth = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        dto.getEmail(),
+                        dto.getPassword()
+                )
+        );
+        SecurityContextHolder.getContext().setAuthentication(auth);
+        String token = tokenProvider.generateToken(auth);
+        return ResponseEntity.ok(Map.of(
+                "email", auth.getName(),
+                "token", token
+        ));
     }
+
 }

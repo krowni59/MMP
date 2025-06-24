@@ -6,6 +6,7 @@ import group.krowni.mpp.entity.User;
 import group.krowni.mpp.repository.RoleRepository;
 import group.krowni.mpp.repository.UserRepository;
 import group.krowni.mpp.service.UserService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -74,9 +75,12 @@ public class UserServiceImpl implements UserService {
     public User findByEmail(String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(() ->
-                        new IllegalArgumentException("Utilisateur introuvable, mail incorrect !")
+                        new UsernameNotFoundException(
+                                "Utilisateur introuvable pour l’email : " + email
+                        )
                 );
     }
+
 
     @Override
     public String disableUser(Long user_id) {

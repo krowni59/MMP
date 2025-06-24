@@ -12,7 +12,7 @@ import java.util.Set;
 @Table(name = "users")
 public class User {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long user_id;
 
     @Column(nullable = false, unique = true, length = 50)
@@ -120,17 +120,5 @@ public class User {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return enabled == user.enabled && Objects.equals(user_id, user.user_id) && Objects.equals(username, user.username) && Objects.equals(password, user.password) && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(email, user.email) && Objects.equals(phone, user.phone) && Objects.equals(roles, user.roles);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(user_id, username, password, firstName, lastName, email, phone, enabled, roles);
     }
 }
