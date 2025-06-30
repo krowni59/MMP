@@ -1,5 +1,6 @@
 package group.krowni.mpp.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -19,21 +20,26 @@ public class User {
     private Long user_id;
 
     @Column(nullable = false, unique = true, length = 50)
+    @JsonIgnore
     private String username;
 
     @Column(nullable = false)
+    @JsonIgnore
     private String password;
 
     @Column(nullable = false)
+    @JsonIgnore
     private String firstName;
 
     @Column(nullable = false)
+    @JsonIgnore
     private String lastName;
 
     @Column(nullable = false, unique = true)
     private String email;
 
     @Column(nullable = true, unique = true)
+    @JsonIgnore
     private String phone;
 
     @Column(nullable = false)

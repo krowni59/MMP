@@ -15,7 +15,7 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/seance")
+@RequestMapping("/api/seances")
 public class SeanceController {
     private final SeanceService seanceService;
 
