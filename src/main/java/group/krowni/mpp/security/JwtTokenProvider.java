@@ -48,10 +48,11 @@ public class JwtTokenProvider {
                 .collect(Collectors.joining(","));
 
         return Jwts.builder()
-                .setSubject(String.valueOf(user.getUser_id()))
+                .setSubject(String.valueOf(username))
+                .claim("username", user.getUsername())
                 .claim("roles", roles)
                 .claim("firstName", user.getFirstName())
-                .claim("username", user.getUsername())
+                .claim("id", user.getUser_id())
                 .setIssuedAt(now)
                 .setExpiration(expiry)
                 .signWith(key, SignatureAlgorithm.HS256)
