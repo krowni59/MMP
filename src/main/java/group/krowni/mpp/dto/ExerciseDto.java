@@ -1,10 +1,11 @@
 package group.krowni.mpp.dto;
 
 import java.util.List;
+import java.util.Set;
 
 public class ExerciseDto {
     private String name;
-    private List<String> muscles;
+    private Set<Long> muscleIds;
 
     public String getName() {
         return name;
@@ -14,11 +15,11 @@ public class ExerciseDto {
         this.name = name;
     }
 
-    public List<String> getMuscles() {
-        return muscles;
+    public Set<Long> getMuscleIds() {
+        return muscleIds;
     }
 
-    public void setMuscles(List<String> muscles) {
-        this.muscles = muscles;
+    public void setMusclesIds(Set<Long> muscleIds) {
+        this.muscleIds = muscleIds;
     }
 }

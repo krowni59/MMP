@@ -1,6 +1,8 @@
 package group.krowni.mpp.service;
 
+import group.krowni.mpp.dto.ExerciseDto;
 import group.krowni.mpp.entity.Exercise;
+import group.krowni.mpp.entity.Muscle;
 
 import java.util.List;
 
@@ -16,7 +18,7 @@ public interface ExerciseService {
      * @param exercise l'exercice a creer
      * @return l'exercice cree
      */
-    Exercise create(Exercise exercise);
+    Exercise create(ExerciseDto exercise);
 
     /**
      * Met a jour un exercice complet
@@ -61,4 +63,10 @@ public interface ExerciseService {
      * @return l'exercice (ou lance une exception si non trouve)
      */
     Exercise removeMuscle(Long exerciseId, String muscleName);
+
+    /**
+     * Retourne tous les muscles de la BDD
+     * @return l'exercice (ou lance une exception si non trouve)
+     */
+    List<Muscle> findAllMuscles();
 }

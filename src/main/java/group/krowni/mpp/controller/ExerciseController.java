@@ -1,6 +1,8 @@
 package group.krowni.mpp.controller;
 
+import group.krowni.mpp.dto.ExerciseDto;
 import group.krowni.mpp.entity.Exercise;
+import group.krowni.mpp.entity.Muscle;
 import group.krowni.mpp.service.ExerciseService;
 import group.krowni.mpp.service.impl.ExerciseServiceImpl;
 import org.springframework.http.ResponseEntity;
@@ -36,7 +38,7 @@ public class ExerciseController {
 
     /** 3. Crée un nouvel exercice */
     @PostMapping("/create")
-    public ResponseEntity<Exercise> create(@RequestBody Exercise dto) {
+    public ResponseEntity<Exercise> create(@RequestBody ExerciseDto dto) {
         Exercise created = exerciseService.create(dto);
         // Construit l'URI de la ressource créée : /api/exercises/{id}
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
@@ -78,5 +80,12 @@ public class ExerciseController {
             @RequestParam String muscle) {
         Exercise updated = exerciseService.removeMuscle(id, muscle);
         return ResponseEntity.ok(updated);
+    }
+
+    /** 8. Recupere tous les muscles de la BDD */
+    @GetMapping("/muscles")
+    public ResponseEntity<List<Muscle>> getMuscles() {
+        List<Muscle> muscles = exerciseService.findAllMuscles();
+        return ResponseEntity.ok(muscles);
     }
 }

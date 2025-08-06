@@ -1,5 +1,6 @@
 package group.krowni.mpp.service.impl;
 
+import group.krowni.mpp.dto.ExerciseDto;
 import group.krowni.mpp.entity.Exercise;
 import group.krowni.mpp.entity.Muscle;
 import group.krowni.mpp.repository.ExerciseRepository;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -31,16 +33,18 @@ public class ExerciseServiceImpl implements ExerciseService {
     }
 
     @Override
-    public Exercise create(Exercise exercise) {
-        // 1) Pour chaque muscle nommé dans exercise.getMuscles(), on cherche (ou crée)
-        Set<Muscle> persisted = exercise.getMuscles().stream()
-                .map(m -> muscleRepository.findByName(m.getName())
-                        .orElseGet(() -> muscleRepository.save(new Muscle(m.getName()))))
-                .collect(Collectors.toSet());
-        exercise.setMuscles(persisted);
-
-        exercise.setExercise_id(null);
-        return exerciseRepository.save(exercise);
+    public Exercise create(ExerciseDto dto) {
+        // 1) On charge les muscles par leurs IDs
+        Set<Muscle> muscles = new HashSet<>(muscleRepository.findAllById(dto.getMuscleIds()));
+        if (muscles.size() != dto.getMuscleIds().size()) {
+            throw new EntityNotFoundException("Un des muscles est introuvable");
+        }
+        // 2) Création et association
+        Exercise ex = new Exercise();
+        ex.setName(dto.getName());
+        ex.setMuscles(muscles);
+        // 3) Sauvegarde
+        return exerciseRepository.save(ex);
     }
 
     @Override
@@ -125,5 +129,10 @@ public class ExerciseServiceImpl implements ExerciseService {
 
         // 5) Retourne l'entité mise à jour
         return exercise;
+    }
+
+    @Override
+    public List<Muscle> findAllMuscles() {
+        return muscleRepository.findAll();
     }
 }

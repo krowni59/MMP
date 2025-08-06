@@ -27,11 +27,11 @@ public class User {
     @JsonIgnore
     private String password;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     @JsonIgnore
     private String firstName;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     @JsonIgnore
     private String lastName;
 

@@ -1,5 +1,7 @@
 package group.krowni.mpp.security;
 
+import group.krowni.mpp.entity.User;
+import group.krowni.mpp.service.UserService;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,6 +18,7 @@ import java.util.stream.Collectors;
 @Component
 public class JwtTokenProvider {
 
+    private final UserService userService;
     @Value("${app.jwt.secret}")
     private String jwtSecret;              // Base64-encoded
 
@@ -23,6 +26,10 @@ public class JwtTokenProvider {
     private long jwtExpirationInMs;
 
     private Key key;
+
+    public JwtTokenProvider(UserService userService) {
+        this.userService = userService;
+    }
 
     @PostConstruct
     public void init() {
@@ -32,6 +39,7 @@ public class JwtTokenProvider {
 
     public String generateToken(Authentication authentication) {
         String username = authentication.getName();
+        User user = userService.findByEmail(username);
         Date now       = new Date();
         Date expiry    = new Date(now.getTime() + jwtExpirationInMs);
 
@@ -40,8 +48,10 @@ public class JwtTokenProvider {
                 .collect(Collectors.joining(","));
 
         return Jwts.builder()
-                .setSubject(username)
+                .setSubject(String.valueOf(user.getUser_id()))
                 .claim("roles", roles)
+                .claim("firstName", user.getFirstName())
+                .claim("username", user.getUsername())
                 .setIssuedAt(now)
                 .setExpiration(expiry)
                 .signWith(key, SignatureAlgorithm.HS256)
